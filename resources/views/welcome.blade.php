@@ -78,11 +78,10 @@
                @endforeach
            </select>
 
-           <select>        
-               <option value="0">Street</option>
+           <select class="states">
            </select>
 
-           <select class="states">
+           <select class="cities">        
            </select>
 
             <span>&nbsp;</span><input type="submit" value="Send" />            
@@ -143,6 +142,32 @@
 
                          div.find('.states').html(" ");
                          div.find('.states').append(op);
+                      },
+                      error:function(){
+
+                      }
+
+                  });
+            });
+
+            $(document).on('change','.states',function(){
+                var id=$(this).val();
+                var div=$(this).parent();
+
+                var op="<option value='0' selected disabled>Cities</option>";
+
+                  $.ajax({
+                      type:'get',
+                      url:'{!!URL::to("/cities")!!}',
+                      data:{'id':id},
+                      success:function(data){
+
+                          for(var i=0;i<data.length;i++){
+                          op+='<option value="'+data[i].id+'">'+data[i].name+'</option>';
+                         }
+
+                         div.find('.cities').html(" ");
+                         div.find('.cities').append(op);
                       },
                       error:function(){
 

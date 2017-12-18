@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Person;
 use App\Country;
 use App\States;
+use App\Cities;
 
 class PhoneBookController extends Controller
 {
@@ -42,5 +43,11 @@ class PhoneBookController extends Controller
     {
       $states =States::select('id','name')->where('country_id',$request->id)->get();
       return response()->json($states);
+    }
+
+    public function getCities(Request $request)
+    {
+      $cities =Cities::select('id','name')->where('state_id',$request->id)->get();
+      return response()->json($cities);
     }
 }
