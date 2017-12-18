@@ -72,17 +72,20 @@
            <span>Mobile Number</span><input type="text" name="mobile_number"/>
            </label>
 
-           <select class="country">
+           <select class="country" onchange="myFunction1()" id="mySelect">
                @foreach($countries as $country)
                <option value="{{$country->id}}">{{$country->name}}</option>
                @endforeach
            </select>
+           <input type="text" name="person_country" id="getCountry">
 
-           <select class="states">
+           <select class="states" onchange="myFunction2()" id="mySelect2">
            </select>
+           <input type="text" name="person_state" id="getState">
 
-           <select class="cities">        
+           <select class="cities" onchange="myFunction3()" id="mySelect3">        
            </select>
+           <input type="text" name="person_city" id="getCity">
 
             <span>&nbsp;</span><input type="submit" value="Send" />            
        </form>
@@ -178,6 +181,21 @@
 
             $('.country').trigger('change')
       });
+
+      function myFunction1() {
+         var x = document.getElementById("mySelect").value;
+         document.getElementById("getCountry").value = x;
+      }
+
+      function myFunction2() {
+         var x = document.getElementById("mySelect2").value;
+         document.getElementById("getState").value = x;
+      }
+
+      function myFunction3() {
+         var x = document.getElementById("mySelect3").value;
+         document.getElementById("getCity").value = x;
+      }
     </script>
 
 
