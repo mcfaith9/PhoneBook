@@ -3,7 +3,7 @@
     <head>
         <title>Phone Book</title>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
-
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/phonebook_form.css') }}">
         <style>
             html, body {
                 height: 100%;
@@ -43,28 +43,35 @@
         </style>
     </head>
     <body>
-    <h1>Personal Info</h1>
-   
-    @if(count($errors)>0)
-      <div class="row">
-        <div class="col-md-6">
-            <ul>
-                @foreach($errors->all() as $error)
-                <li>{{@error}}</li>
-                @endforeach
-            </ul>
-        </div>
-      </div>
-    @endif
 
-       <form method="POST" action="{{ url('/submit') }}">
+    @if(count($errors)>0)
+         <div class="row">
+           <div class="col-md-6">
+               <ul>
+                   @foreach($errors->all() as $error)
+                   <li>{{@error}}</li>
+                   @endforeach
+               </ul>
+           </div>
+         </div>
+       @endif
+
+       <form class="form-style-4" method="POST" action="{{ url('/submit') }}">
            {{ csrf_field() }}
-           <input type="text" name="fname" placeholder="Firts Name">
-           <input type="text" name="lname" placeholder="Last Name">
-           <input type="text" name="phone_number" placeholder="Phone Number">
-           <input type="text" name="mobile_number" placeholder="Mobile Number">
-           <input type="text" name="city" placeholder="City">
            
+           <label for="field1">
+           <span>First Name</span><input type="text" name="fname"/>
+           </label>
+           <label for="field1">
+           <span>Last Name</span><input type="text" name="lname"/>
+           </label>
+           <label for="field1">
+           <span>Contact Number</span><input type="text" name="phone_number"/>
+           </label>
+           <label for="field1">
+           <span>Mobile Number</span><input type="text" name="mobile_number"/>
+           </label>
+
            <select class="country">
                @foreach($countries as $country)
                <option value="{{$country->id}}">{{$country->name}}</option>
@@ -77,10 +84,9 @@
 
            <select class="states">
            </select>
-           
-           <button>Submit</button>
+
+            <span>&nbsp;</span><input type="submit" value="Send" />            
        </form>
-    
 
     <table>
         <tbody>
@@ -94,19 +100,20 @@
                 <th>State</th>
                 <th>Country</th>
             </tr>
-            <tr>
+            
             @foreach($people as $person)
+            <tr>
                 <td>{{$person->fname}}</td>
                 <td>{{$person->lname}}</td>
                 <td>{{$person->phone_number}}</td>
                 <td>{{$person->mobile_number ? $person->mobile_number : 'NA'}}</td>
-            @endforeach    
-                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
             </tr>
+            @endforeach    
+            
         </tbody>
     </table>
     
@@ -147,7 +154,6 @@
             $('.country').trigger('change')
       });
     </script>
-
 
 
     </body>

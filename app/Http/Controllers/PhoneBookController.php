@@ -17,7 +17,7 @@ class PhoneBookController extends Controller
        $this->validate($request, [
                 'fname' => 'required|max:120',
                 'lname' => 'required|max:120',
-                'phone_number' => 'required|Numeric|min:12',
+                'phone_number' => 'required|numeric',
             ]);
 
         $person = new Person;
@@ -30,6 +30,7 @@ class PhoneBookController extends Controller
 
         return redirect('/');
     }
+
     public function view(){
 
         $countries = Country::all();
