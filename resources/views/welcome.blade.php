@@ -4,6 +4,7 @@
         <title>Phone Book</title>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
         <link rel="stylesheet" type="text/css" href="{{ asset('css/phonebook_form.css') }}">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
         <style>
             html, body {
                 height: 100%;
@@ -28,7 +29,7 @@
             table {
                 font-family: arial, sans-serif;
                 border-collapse: collapse;
-                width: 100%;
+                width: 100%;                
             }
 
             td, th {
@@ -44,51 +45,66 @@
     </head>
     <body>
 
-    @if(count($errors)>0)
-         <div class="row">
-           <div class="col-md-6">
-               <ul>
-                   @foreach($errors->all() as $error)
-                   <li>{{@error}}</li>
-                   @endforeach
-               </ul>
-           </div>
+    <div class="print-error-msg" style="display:none">
+    <ul></ul>
+    </div>
+     
+     <form class="form-style-4" method="POST" action="{{ url('/submit') }}">
+     <div class="row">
+         <div class="col-md-12">
+         {{ csrf_field() }}          
+             
+         <div class="form-group">
+             <label for="field1">
+             <span>First Name</span><input type="text" name="fname" value="{{ Request::old('fname') }}" class="req-input" />
+             </label>
+         </div>    
+          
+         <div class="form-group">
+             <label for="field1">
+             <span>Last Name</span><input type="text" name="lname" value="{{ Request::old('lname') }}" class="req-input" />
+             </label>
          </div>
-       @endif
 
-       <form class="form-style-4" method="POST" action="{{ url('/submit') }}">
-           {{ csrf_field() }}
-           
-           <label for="field1">
-           <span>First Name</span><input type="text" name="fname"/>
-           </label>
-           <label for="field1">
-           <span>Last Name</span><input type="text" name="lname"/>
-           </label>
-           <label for="field1">
-           <span>Contact Number</span><input type="text" name="phone_number"/>
-           </label>
-           <label for="field1">
-           <span>Mobile Number</span><input type="text" name="mobile_number"/>
-           </label>
+         <div class="form-group">
+             <label for="field1">
+             <span>Contact Number</span><input type="text" name="phone_number" value="{{ Request::old('phone_number') }}" class="req-input" />
+             </label>
+         </div>
 
-           <select class="country" onchange="myFunction1()" id="mySelect">
-               @foreach($countries as $country)
-               <option value="{{$country->id}}">{{$country->name}}</option>
-               @endforeach
-           </select>
-           <input type="text" name="person_country" id="getCountry">
+         <div class="form-group">
+             <label for="field1">
+             <span>Tel. Number</span><input type="text" name="mobile_number" value="{{ Request::old('mobile_number') }}"/>
+             </label>
+         </div>
+         
+         <select class="country" onchange="myFunction1()" id="mySelect">
+             <option value="0" selected disabled>Select Country</option>
+             @foreach($countries as $country)
+             <option value="{{$country->id}}">{{$country->name}}</option>
+             @endforeach
+         </select>
+         <input type="hidden" name="person_country" id="getCountry">                 
+         
+         <select class="states" onchange="myFunction2()" id="mySelect2">
+         </select>
+         <input type="hidden" name="person_state" id="getState">
 
-           <select class="states" onchange="myFunction2()" id="mySelect2">
-           </select>
-           <input type="text" name="person_state" id="getState">
+         <select class="cities" onchange="myFunction3()" id="mySelect3">        
+         </select>
+         <input type="hidden" name="person_city" id="getCity">
 
-           <select class="cities" onchange="myFunction3()" id="mySelect3">        
-           </select>
-           <input type="text" name="person_city" id="getCity">
+         <div class="form-group">
+             <label for="field1">
+             <span>Street</span><input type="text" name="person_street" value="{{ Request::old('person_street') }}"" />
+             </label>
+         </div>
 
-            <span>&nbsp;</span><input type="submit" value="Send" />            
-       </form>
+          <span>&nbsp;</span><input type="submit" value="Send"/>    
+              </div>
+          </div>         
+     </form>
+               
 
     <table>
         <tbody>
@@ -97,10 +113,10 @@
                 <th>Last Name</th>
                 <th>Phone Number</th>
                 <th>Mobile Number</th>
-                <th>Street</th>
-                <th>City</th>
-                <th>State</th>
                 <th>Country</th>
+                <th>State</th>
+                <th>City</th>
+                <th>Street</th>
             </tr>
             
             @foreach($people as $person)
@@ -109,10 +125,10 @@
                 <td>{{$person->lname}}</td>
                 <td>{{$person->phone_number}}</td>
                 <td>{{$person->mobile_number ? $person->mobile_number : 'NA'}}</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>{{$person->person_country}}</td>
+                <td>{{$person->person_state}}</td>
+                <td>{{$person->person_city}}</td>
+                <td>{{$person->person_street ? $person->person_street : 'NA'}}</td>
             </tr>
             @endforeach    
             
@@ -126,7 +142,7 @@
     <script type="text/javascript">
       //for my dynamic phonebook country states drop down list dependent
       $(document).ready(function(){
-
+            //For my Country State Dynamic
             $(document).on('change','.country',function(){
                 var id=$(this).val();
                 var div=$(this).parent();
@@ -152,12 +168,12 @@
 
                   });
             });
-
+            //For my State City Dynamic
             $(document).on('change','.states',function(){
                 var id=$(this).val();
                 var div=$(this).parent();
 
-                var op="<option value='0' selected disabled>Cities</option>";
+                var op="<option value='0' selected disabled>Select City</option>";
 
                   $.ajax({
                       type:'get',
@@ -180,6 +196,43 @@
             });
 
             $('.country').trigger('change')
+            $('.states').trigger('change')
+
+
+            //Store Data using validation
+            $(".btn-submit").click(function(e){
+                e.preventDefault();
+                var _token = $("input[name='_token']").val();
+                var fname = $("input[name='fname']").val();
+                var lname = $("input[name='lname']").val();
+                var phone_number = $("input[name='phone_number']").val();
+                var person_country = $("input[name='person_country']").val();
+                var person_state = $("input[name='person_state']").val();
+                var person_city = $("input[name='person_city']").val();
+
+                $.ajax({
+                    url: '{{!!URL::to("submit")!!}}',
+                    type:'POST',
+                    data: {_token:_token, fname:fname, lname:lname, phone_number:phone_number, person_country:person_country,
+                            person_state:person_state, person_city:person_city },
+                    success: function(data) {
+                        if($.isEmptyObject(data.error)){
+                            alert(data.success);
+                        }else{
+                            alert(data.error);
+                        }
+                    }
+                });
+            }); 
+
+            function printErrorMsg (msg) {
+            $(".print-error-msg").find("ul").html('');
+            $(".print-error-msg").css('display','block');
+            $.each( msg, function( key, value ) {
+                $(".print-error-msg").find("ul").append('<li>'+value+'</li>');
+            });
+            }
+
       });
 
       function myFunction1() {
