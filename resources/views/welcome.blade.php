@@ -41,11 +41,13 @@
             tr:nth-child(even) {
                 background-color: #dddddd;
             }
+            .form-error{
+               box-shadow: 0px 4px 20px -2px red;            }
         </style>
     </head>
     <body>
 
-    <div class="print-error-msg" style="display:none">
+    <div class="print-error-msg" style="display:none;">
     <ul></ul>
     </div>
      
@@ -206,8 +208,6 @@
                             person_state:person_state, person_city:person_city, person_street:person_street },
                     success: function(data) {
 
-                        console.log(data);
-
                         if($.isEmptyObject(data.error)){
                             console.log(data.success);
                         }else{
@@ -222,6 +222,7 @@
             $(".print-error-msg").css('display','block');
             $.each( msg, function( key, value ) {
                 $(".print-error-msg").find("ul").append("<li>"+value+"</li>");
+                $(".req-input").addClass("form-error");
             });
             }
 
