@@ -49,34 +49,23 @@
     <ul></ul>
     </div>
      
-     <form class="form-style-4" method="POST" action="{{ url('/submit') }}">
-     <div class="row">
-         <div class="col-md-12">
-         {{ csrf_field() }}          
+     <form class="form-style-4" method="POST" action="{{ url('/submit')}}">
              
-         <div class="form-group">
-             <label for="field1">
-             <span>First Name</span><input type="text" name="fname" value="{{ Request::old('fname') }}" class="req-input" />
-             </label>
-         </div>    
-          
-         <div class="form-group">
-             <label for="field1">
-             <span>Last Name</span><input type="text" name="lname" value="{{ Request::old('lname') }}" class="req-input" />
-             </label>
-         </div>
+         <label for="field1">
+         <span>First Name</span><input type="text" name="fname" value="{{ Request::old('fname') }}" class="req-input" />
+         </label>
+      
+         <label for="field1">
+         <span>Last Name</span><input type="text" name="lname" value="{{ Request::old('lname') }}" class="req-input" />
+         </label>
 
-         <div class="form-group">
-             <label for="field1">
-             <span>Contact Number</span><input type="text" name="phone_number" value="{{ Request::old('phone_number') }}" class="req-input" />
-             </label>
-         </div>
+         <label for="field1">
+         <span>Contact Number</span><input type="text" name="phone_number" value="{{ Request::old('phone_number') }}" class="req-input" />
+         </label>
 
-         <div class="form-group">
-             <label for="field1">
-             <span>Tel. Number</span><input type="text" name="mobile_number" value="{{ Request::old('mobile_number') }}"/>
-             </label>
-         </div>
+         <label for="field1">
+         <span>Tel. Number</span><input type="text" name="mobile_number" value="{{ Request::old('mobile_number') }}"/>
+         </label>
          
          <select class="country" onchange="myFunction1()" id="mySelect">
              <option value="0" selected disabled>Select Country</option>
@@ -94,15 +83,11 @@
          </select>
          <input type="hidden" name="person_city" id="getCity">
 
-         <div class="form-group">
-             <label for="field1">
-             <span>Street</span><input type="text" name="person_street" value="{{ Request::old('person_street') }}"" />
-             </label>
-         </div>
+         <label for="field1">
+         <span>Street</span><input type="text" name="person_street" value="{{ Request::old('person_street') }}"" />
+         </label>
 
-          <span>&nbsp;</span><input type="submit" value="Send"/>    
-              </div>
-          </div>         
+     <button class="btn-submit">Submit</button>
      </form>
                
 
@@ -198,7 +183,7 @@
             $('.country').trigger('change')
             $('.states').trigger('change')
 
-
+            
             //Store Data using validation
             $(".btn-submit").click(function(e){
                 e.preventDefault();
@@ -206,30 +191,37 @@
                 var fname = $("input[name='fname']").val();
                 var lname = $("input[name='lname']").val();
                 var phone_number = $("input[name='phone_number']").val();
+                var mobile_number = $("input[name='mobile_number']").val();
                 var person_country = $("input[name='person_country']").val();
                 var person_state = $("input[name='person_state']").val();
                 var person_city = $("input[name='person_city']").val();
+                var person_street = $("input[name='person_street']").val();
+
 
                 $.ajax({
-                    url: '{{!!URL::to("submit")!!}}',
+                    url: "submit",
                     type:'POST',
-                    data: {_token:_token, fname:fname, lname:lname, phone_number:phone_number, person_country:person_country,
-                            person_state:person_state, person_city:person_city },
+                    headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                    data: {fname:fname, lname:lname, phone_number:phone_number, mobile_number:mobile_number, person_country:person_country,
+                            person_state:person_state, person_city:person_city, person_street:person_street },
                     success: function(data) {
+
+                        console.log(data);
+
                         if($.isEmptyObject(data.error)){
-                            alert(data.success);
+                            console.log(data.success);
                         }else{
-                            alert(data.error);
+                            printErrorMsg(data.error);
                         }
                     }
                 });
             }); 
 
             function printErrorMsg (msg) {
-            $(".print-error-msg").find("ul").html('');
+            $(".print-error-msg").find("ul").empty();
             $(".print-error-msg").css('display','block');
             $.each( msg, function( key, value ) {
-                $(".print-error-msg").find("ul").append('<li>'+value+'</li>');
+                $(".print-error-msg").find("ul").append("<li>"+value+"</li>");
             });
             }
 
