@@ -23,26 +23,27 @@ class PhoneBookController extends Controller
                 'person_country' => 'required',
                 'person_state' => 'required',
                 'person_city' => 'required',
+                'person_street' => 'required',
             ]);
          
          if($validator->passes()) {
 
           $person = new Person;
 
-          $person->fname = $request->input('fname');
-          $person->lname = $request->input('lname');
-          $person->phone_number = $request->input('phone_number');
-          $person->mobile_number = $request->input('mobile_number');
-          $person->person_country = $request->input('person_country');
-          $person->person_state = $request->input('person_state');
-          $person->person_city = $request->input('person_city');
-          $person->person_street = $request->input('person_street');
+          $person->fname = $request->fname;
+          $person->lname = $request->lname;
+          $person->phone_number = $request->phone_number;
+          $person->mobile_number = $request->mobile_number;
+          $person->person_country = $request->person_country;
+          $person->person_state = $request->person_state;
+          $person->person_city = $request->person_city;
+          $person->person_street = $request->person_street;
           $person->save();  
           
           return response()->json(['success'=>'Added new records.']);
          }
            
-        return response()->json(['error'=>$validator->errors()->all()]);
+        return response()->json(['error'=>$validator->errors()]);
     }
 
     public function view(){

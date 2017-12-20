@@ -37,26 +37,6 @@
     padding: 0px 0px 0px 0px;
     font-style: italic;
 }
-.form-style-4 textarea{
-    font-style: italic;
-    padding: 0px 0px 0px 0px;
-    background: transparent;
-    outline: none;
-    border: none;
-    border-bottom: 1px dashed #83A4C5;
-    width: 275px;
-    overflow: hidden;
-    resize:none;
-    height:20px;
-}
-
-.form-style-4 textarea:focus, 
-.form-style-4 input[type=text]:focus,
-.form-style-4 input[type=email]:focus,
-.form-style-4 input[type=email] :focus
-{
-    border-bottom: 1px dashed #D9FFA9;
-}
 
 .form-style-4 input[type=submit],
 .form-style-4 input[type=button]{

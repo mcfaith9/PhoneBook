@@ -14,15 +14,9 @@
                 margin: 0;
                 padding: 0;
                 width: 100%;
-                display: table;
                 font-weight: 100;
                 font-family: 'Lato';
-            }
-
-            .container {
-                text-align: center;
-                display: table-cell;
-                vertical-align: middle;
+                position: fixed;
             }
 
             /*For my table*/
@@ -37,63 +31,91 @@
                 text-align: left;
                 padding: 8px;
             }
+            tbody{
+                overflow: auto;
+            }
 
             tr:nth-child(even) {
                 background-color: #dddddd;
             }
             .form-error{
-               box-shadow: 0px 4px 20px -2px red;            }
+               box-shadow: 0px 4px 20px -2px red;            
+            }
+
+           .form-error-text{
+            font-size: 15px;
+            height: 25px;
+            color: white;
+            text-shadow: 0px 0px 8px red;
+           }
         </style>
     </head>
     <body>
-
+<!-- 
     <div class="print-error-msg" style="display:none;">
     <ul></ul>
-    </div>
+    </div> -->
      
-     <form class="form-style-4" method="POST" action="{{ url('/submit')}}">
+     <form id="resetForm" class="form-style-4" method="POST" action="{{ url('/submit')}}">
              
          <label for="field1">
-         <span>First Name</span><input type="text" name="fname" value="{{ Request::old('fname') }}" class="req-input" />
+         <span>First Name</span><input type="text" name="fname" value="{{ Request::old('fname') }}" class="req-input-fn" />         
          </label>
-      
-         <label for="field1">
-         <span>Last Name</span><input type="text" name="lname" value="{{ Request::old('lname') }}" class="req-input" />
-         </label>
+         <div class="print-error-msg" style="display:none; margin-left: 169px;">
+         <span id="form-text1"></span>         
+         </div>
 
          <label for="field1">
-         <span>Contact Number</span><input type="text" name="phone_number" value="{{ Request::old('phone_number') }}" class="req-input" />
+         <span>Last Name</span><input type="text" name="lname" value="{{ Request::old('lname') }}" class="req-input-ln" />
          </label>
+         <div class="print-error-msg" style="display:none; margin-left: 169px;">
+         <span id="form-text2"></span>
+         </div>
 
          <label for="field1">
-         <span>Tel. Number</span><input type="text" name="mobile_number" value="{{ Request::old('mobile_number') }}"/>
+         <span>Contact Number</span><input type="text" name="phone_number" value="{{ Request::old('phone_number') }}" class="req-input-pm" />
          </label>
-         
-         <select class="country" onchange="myFunction1()" id="mySelect">
-             <option value="0" selected disabled>Select Country</option>
+         <div class="print-error-msg" style="display:none; margin-left: 169px;">
+         <span id="form-text3"></span>
+         </div>
+
+         <label for="field1">
+         <span>Tel. Number</span><input type="text" name="mobile_number" value="{{ Request::old('mobile_number') }}"/> *Optional
+         </label>
+
+         <select class="req-input-cn" id="country" name="person_country">
              @foreach($countries as $country)
              <option value="{{$country->id}}">{{$country->name}}</option>
              @endforeach
          </select>
-         <input type="hidden" name="person_country" id="getCountry">                 
-         
-         <select class="states" onchange="myFunction2()" id="mySelect2">
-         </select>
-         <input type="hidden" name="person_state" id="getState">
+         <div class="print-error-msg" style="display:none; margin-left: 169px;">
+         <span id="form-text5"></span>
+         </div>
 
-         <select class="cities" onchange="myFunction3()" id="mySelect3">        
+         <select class="req-input-sta" id="states" name="person_state">
          </select>
-         <input type="hidden" name="person_city" id="getCity">
+         <div class="print-error-msg" style="display:none; margin-left: 169px;">
+         <span id="form-text5"></span>
+         </div>
+
+         <select class="req-input-ct" id="cities" name="person_city">        
+         </select>
+         <div class="print-error-msg" style="display:none; margin-left: 169px;">
+         <span id="form-text6"></span>
+         </div>
 
          <label for="field1">
-         <span>Street</span><input type="text" name="person_street" value="{{ Request::old('person_street') }}"" />
+         <span>Street</span><input type="text" name="person_street" value="{{ Request::old('person_street') }}" class="req-input-str" />
          </label>
+         <div class="print-error-msg" style="display:none; margin-left: 169px;">
+         <span id="form-text7"></span>
+         </div>
 
      <button class="btn-submit">Submit</button>
      </form>
                
-
-    <table>
+   <div style="overflow-y: auto; height: 500px;">
+    <table id="myTable" >
         <tbody>
             <tr>
                 <th>First Name</th>
@@ -115,13 +137,17 @@
                 <td>{{$person->person_country}}</td>
                 <td>{{$person->person_state}}</td>
                 <td>{{$person->person_city}}</td>
-                <td>{{$person->person_street ? $person->person_street : 'NA'}}</td>
+                <td>{{$person->person_street}}</td>
             </tr>
             @endforeach    
             
         </tbody>
     </table>
-    
+    </div>
+
+    </body>
+
+
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
@@ -130,7 +156,7 @@
       //for my dynamic phonebook country states drop down list dependent
       $(document).ready(function(){
             //For my Country State Dynamic
-            $(document).on('change','.country',function(){
+            $(document).on('change','#country',function(){
                 var id=$(this).val();
                 var div=$(this).parent();
 
@@ -146,8 +172,8 @@
                           op+='<option value="'+data[i].id+'">'+data[i].name+'</option>';
                          }
 
-                         div.find('.states').html(" ");
-                         div.find('.states').append(op);
+                         div.find('#states').html(" ");
+                         div.find('#states').append(op);
                       },
                       error:function(){
 
@@ -156,7 +182,7 @@
                   });
             });
             //For my State City Dynamic
-            $(document).on('change','.states',function(){
+            $(document).on('change','#states',function(){
                 var id=$(this).val();
                 var div=$(this).parent();
 
@@ -172,8 +198,8 @@
                           op+='<option value="'+data[i].id+'">'+data[i].name+'</option>';
                          }
 
-                         div.find('.cities').html(" ");
-                         div.find('.cities').append(op);
+                         div.find('#cities').html(" ");
+                         div.find('#cities').append(op);
                       },
                       error:function(){
 
@@ -182,21 +208,21 @@
                   });
             });
 
-            $('.country').trigger('change')
-            $('.states').trigger('change')
+            $('#country').trigger('change')
+            $('#states').trigger('change')
 
             
             //Store Data using validation
             $(".btn-submit").click(function(e){
                 e.preventDefault();
-                var _token = $("input[name='_token']").val();
+                // var _token = $("input[name='_token']").val();
                 var fname = $("input[name='fname']").val();
                 var lname = $("input[name='lname']").val();
                 var phone_number = $("input[name='phone_number']").val();
                 var mobile_number = $("input[name='mobile_number']").val();
-                var person_country = $("input[name='person_country']").val();
-                var person_state = $("input[name='person_state']").val();
-                var person_city = $("input[name='person_city']").val();
+                var person_country = $("#country option:selected").text();
+                var person_state = $("#states option:selected").text();
+                var person_city = $("#cities option:selected").text();
                 var person_street = $("input[name='person_street']").val();
 
 
@@ -209,9 +235,11 @@
                     success: function(data) {
 
                         if($.isEmptyObject(data.error)){
-                            console.log(data.success);
+                            alert(data.success);
+                            $('#resetForm')[0].reset();
+                            $("#myTable").append("<tr class='tr'><td class='tableText'>"+fname+"</td><td class='tableText'>"+lname+"</td><td class='tableText'>"+phone_number+"</td><td>"+mobile_number+"</td><td class='tableText'>"+person_country+"</td><td class='tableText'>"+person_state+"</td><td class='tableText'>"+person_city+"</td><td class='tableText'>"+person_street+"</td></tr>");                            
                         }else{
-                            printErrorMsg(data.error);
+                            printErrorMsg(data.error);                            
                         }
                     }
                 });
@@ -221,29 +249,84 @@
             $(".print-error-msg").find("ul").empty();
             $(".print-error-msg").css('display','block');
             $.each( msg, function( key, value ) {
-                $(".print-error-msg").find("ul").append("<li>"+value+"</li>");
-                $(".req-input").addClass("form-error");
+
+                if (key = 'fname') {
+                    $(".print-error-msg").addClass("form-error-text");
+                    $("#form-text1").html("The First Name field is required.");
+                    $(".req-input-fn").addClass("form-error");
+                }
+                if (key = 'lname') {
+                    $(".print-error-msg").addClass("form-error-text");
+                    $("#form-text2").html("The Last Name field is required.");
+                    $(".req-input-ln").addClass("form-error");
+                }
+                if (key = 'phone_number') {
+                    $(".print-error-msg").addClass("form-error-text");
+                    $("#form-text3").html("The Countact Number field is required.");
+                    $(".req-input-pm").addClass("form-error");
+                }
+                if (key = 'person_country') {
+                    $(".print-error-msg").addClass("form-error-text");
+                    $("#form-text4").html("Country is required.");
+                    $(".req-input-cn").addClass("form-error");
+                }
+                if (key = 'person_state') {
+                    $(".print-error-msg").addClass("form-error-text");
+                    $("#form-text5").html("State is required.");
+                    $(".req-input-sta").addClass("form-error");
+                }
+                if (key = 'person_city') {
+                    $(".print-error-msg").addClass("form-error-text");
+                    $("#form-text6").html("City is required.");
+                    $(".req-input-ct").addClass("form-error");
+                }
+                if (key = 'person_street') {
+                    $(".print-error-msg").addClass("form-error-text");
+                    $("#form-text7").html("Street is required.");
+                    $(".req-input-str").addClass("form-error");
+                }
+
             });
             }
+             //Reset Error
+            function RemoveErrors(){
+                   if($("input[name='fname']").val()){
+                     $(".req-input-fn").removeClass("form-error");
+                     $("#form-text1").html("");
+                   }
+                   if($("input[name='lname']").val()){
+                     $(".req-input-ln").removeClass("form-error");
+                     $("#form-text2").html("");
+                   }
+                   if($("input[name='phone_number']").val()){
+                     $(".req-input-pm").removeClass("form-error");
+                     $("#form-text3").html("");
+                   }
+                   if($("select[name='person_city']").val() > 0){
+                     $(".req-input-ct").removeClass("form-error");
+                     $("#form-text4").html("");
+                   }
+                   if($("select[name='person_country']").val() > 0){
+                     $(".req-input-cn").removeClass("form-error");
+                     $("#form-text5").html("");
+                   }
+                   if($("select[name='person_state']").val() > 0){
+                     $(".req-input-sta").removeClass("form-error");
+                     $("#form-text6").html("");
+                   }
+                   if($("input[name='person_street']").val()){
+                     $(".req-input-str").removeClass("form-error");
+                     $("#form-text7").html("");
+                   }
+               }
 
-      });
+               $("input[type='text']").change(function() {
+                      RemoveErrors();
+                  });
+                  $("select").change(function() {
+                      RemoveErrors();
+                  });
 
-      function myFunction1() {
-         var x = document.getElementById("mySelect").value;
-         document.getElementById("getCountry").value = x;
-      }
-
-      function myFunction2() {
-         var x = document.getElementById("mySelect2").value;
-         document.getElementById("getState").value = x;
-      }
-
-      function myFunction3() {
-         var x = document.getElementById("mySelect3").value;
-         document.getElementById("getCity").value = x;
-      }
+      });       
     </script>
-
-
-    </body>
 </html>

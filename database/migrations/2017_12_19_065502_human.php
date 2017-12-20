@@ -13,10 +13,10 @@ class Human extends Migration
     public function up()
     {
         Schema::table('people', function (Blueprint $table) {                      
-            $table->integer('person_country')->after('mobile_number'); 
-            $table->integer('person_state')->after('person_country');
-            $table->integer('person_city')->after('person_state');
-            $table->integer('person_street')->after('person_city');
+            $table->string('person_country')->after('mobile_number'); 
+            $table->string('person_state')->after('person_country');
+            $table->string('person_city')->after('person_state');
+            $table->string('person_street')->after('person_city');
         });
     }
 
