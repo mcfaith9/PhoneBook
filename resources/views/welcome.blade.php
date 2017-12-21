@@ -29,16 +29,17 @@
             }
 
             td, th {
-                border: 1px solid #dddddd;
+                border: 1px dashed black;
                 text-align: left;
-                padding: 8px;
+                padding: 10px;
             }
+            tr:hover {background-color: #ddd;}
             tbody{
                 overflow: auto;
             }
 
             tr:nth-child(even) {
-                background-color: #dddddd;
+                background-color: #ddd;
             }
             .form-error{
                box-shadow: 0px 4px 20px -2px red;            
