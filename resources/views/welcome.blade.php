@@ -29,7 +29,7 @@
             }
 
             td, th {
-                border: 1px dashed black;
+                border: 1px dashed white;
                 text-align: left;
                 padding: 10px;
             }
@@ -68,6 +68,45 @@
             float: left;  
             display: block; 
            }
+
+           /*Tooltip*/
+           .tooltip {
+               position: relative;
+               display: inline-block;
+           }
+
+           .tooltip .tooltiptext {
+               visibility: hidden;
+               width: 120px;
+               background-color: #4CAF50;
+               color: #fff;
+               text-align: center;
+               border-radius: 6px;
+               padding: 5px 0;
+               position: absolute;
+               z-index: 1;
+               top: -5px;
+               left: 110%;
+               margin-left: -60px;
+               opacity: 0;
+               transition: opacity 1s;
+           }
+
+           .tooltip .tooltiptext::after {
+               content: "";
+               position: absolute;
+               top: 100%;
+               left: 50%;
+               margin-left: -5px;
+               border-width: 5px;
+               border-style: solid;
+               border-color: #555 transparent transparent transparent;
+           }
+
+           .tooltip:hover .tooltiptext {
+               visibility: visible;
+               opacity: 1;
+           }
         </style>
     </head>
     <body>
@@ -79,30 +118,42 @@
      <form id="resetForm" class="form-style-4" method="POST" action="{{ url('/submit')}}">
          <h1 style="color: white;">Personal Information</h1>
          <label for="field1">
+         <div class="tooltip">
+           <span class="tooltiptext">Please input your Firts Name</span>
          <span>First Name</span><input type="text" name="fname" value="{{ Request::old('fname') }}" class="req-input-fn" />         
          </label>
+         </div>
          <div class="print-error-msg" style="display:none; margin-left: 30px;">
          <span id="form-text1"></span>         
          </div>
 
          <label for="field1">
+         <div class="tooltip">
+           <span class="tooltiptext">Please input your Last Name</span>
          <span>Last Name</span><input type="text" name="lname" value="{{ Request::old('lname') }}" class="req-input-ln" />
          </label>
+         </div>
          <div class="print-error-msg" style="display:none; margin-left: 30px;">
          <span id="form-text2"></span>
          </div>
 
          <label for="field1">
+         <div class="tooltip">
+           <span class="tooltiptext">Please input your Contact Number *Must be Numeric</span>
          <span>Contact Number</span><input type="text" name="phone_number" value="{{ Request::old('phone_number') }}" class="req-input-pm" />
          </label>
+         </div>
          <div class="print-error-msg" style="display:none; margin-left: 30px;">
          <span id="form-text3"></span>
          </div>
 
          <label for="field1">
+         <div class="tooltip">
+           <span class="tooltiptext">Please input your Telephone Number</span>
          <span>Tel. Number</span><input type="text" name="mobile_number" placeholder="*Optional" value="{{ Request::old('mobile_number') }}" pattern="\d{3}[\-]\d{3}[\-]\d{4}
-"/> 
+"/>      </div>
          </label>
+         
 
          <select class="req-input-cn" id="country" name="person_country" style="display: block; margin-top: 20px; border-bottom: 1px dashed #83A4C5; background: transparent; width: 275px; outline: none;">
              @foreach($countries as $country)
@@ -125,9 +176,12 @@
          <span id="form-text6"></span>
          </div>
 
-         <label for="field1">
-         <span style="margin-top: 10px;">Street</span><input type="text" name="person_street" value="{{ Request::old('person_street') }}" class="req-input-str" />
+         <div class="tooltip">
+           <span class="tooltiptext">Please input Street Addres</span>
+         <label for="field1">         
+         <span style="margin-top: 10px;">Street</span><input type="text" name="person_street" value="{{ Request::old('person_street') }}" class="req-input-str" />         
          </label>
+         </div>
          <div class="print-error-msg" style="display:none; margin-left: 30px;">
          <span id="form-text7"></span>
          </div>
@@ -145,10 +199,8 @@
                 <th>Last Name</th>
                 <th>Phone Number</th>
                 <th>Mobile Number</th>
+                <th>Address</th>
                 <th>Country</th>
-                <th>State</th>
-                <th>City</th>
-                <th>Street</th>
             </tr>
             
             @foreach($people as $person)
@@ -157,10 +209,9 @@
                 <td>{{$person->lname}}</td>
                 <td>{{$person->phone_number}}</td>
                 <td>{{$person->mobile_number ? $person->mobile_number : 'NA'}}</td>
+                <td>{{$person->person_street}}, {{$person->person_city}},{{$person->person_state}}</td>
                 <td>{{$person->person_country}}</td>
-                <td>{{$person->person_state}}</td>
-                <td>{{$person->person_city}}</td>
-                <td>{{$person->person_street}}</td>
+                
             </tr>
             @endforeach    
             
@@ -183,7 +234,7 @@
                 var id=$(this).val();
                 var div=$(this).parent();
 
-                var op="<option value='0' selected disabled>State/Province</option>";
+                var op="<option value='0' selected disabled>Select State/Province</option>";
 
                   $.ajax({
                       type:'get',
@@ -233,7 +284,6 @@
 
             $('#country').trigger('change')
             $('#states').trigger('change')
-
             
             //Store Data using validation
             $(".btn-submit").click(function(e){
@@ -243,13 +293,15 @@
                 var lname = $("input[name='lname']").val();
                 var phone_number = $("input[name='phone_number']").val();
                 var mobile_number = $("input[name='mobile_number']").val();
+
+                if ($("#country").val() > 0 && $("#states").val() > 0 && $("#cities").val() > 0) {
+
                 var person_country = $("#country option:selected").text();
                 var person_state = $("#states option:selected").text();
                 var person_city = $("#cities option:selected").text();
-                var person_street = 'St. ' + $("input[name='person_street']").val();
-
-
-                $.ajax({
+                var person_street = 'St. ' + $("input[name='person_street']").val();      
+              }
+               $.ajax({
                     url: "submit",
                     type:'POST',
                     headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
@@ -260,12 +312,14 @@
                         if($.isEmptyObject(data.error)){
                             alert(data.success);
                             $('#resetForm')[0].reset();
-                            $("#myTable").append("<tr class='tr'><td class='tableText'>"+fname+"</td><td class='tableText'>"+lname+"</td><td class='tableText'>"+phone_number+"</td><td>"+mobile_number+"</td><td class='tableText'>"+person_country+"</td><td class='tableText'>"+person_state+"</td><td class='tableText'>"+person_city+"</td><td class='tableText'>"+person_street+"</td></tr>");                            
+                            $("#myTable").append("<tr class='tr'><td class='tableText'>"+fname+"</td><td class='tableText'>"+lname+"</td><td class='tableText'>"+phone_number+"</td><td>"+mobile_number+"</td><td class='tableText'>"+person_street+" "+person_city+" "+person_state+"</td><td class='tableText'>"+person_country+"</td></tr>");                            
                         }else{
                             printErrorMsg(data.error);                            
                         }
                     }
                 });
+
+                
             }); 
 
             function printErrorMsg (msg) {
