@@ -33,7 +33,12 @@
                 text-align: left;
                 padding: 10px;
             }
-            tr:hover {background-color: #ddd;}
+            th{
+                background: #4CAF50;
+                color: white;
+            }
+            tr:hover {background-color: #f2f2f2;}
+            tr:hover:nth-child(even) {background-color: #f2f2f2;}
             tbody{
                 overflow: auto;
             }
@@ -57,7 +62,7 @@
             height: auto;  
             position: absolute; 
             margin-left: 400px;  
-            margin-top: 30px;  
+            margin-top: 100px;  
            }
            .div-side1{            
             float: left;  
@@ -241,7 +246,7 @@
                 var person_country = $("#country option:selected").text();
                 var person_state = $("#states option:selected").text();
                 var person_city = $("#cities option:selected").text();
-                var person_street = 'St, ' + $("input[name='person_street']").val();
+                var person_street = 'St. ' + $("input[name='person_street']").val();
 
 
                 $.ajax({
