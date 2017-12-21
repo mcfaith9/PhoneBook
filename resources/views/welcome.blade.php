@@ -17,13 +17,15 @@
                 font-weight: 100;
                 font-family: 'Lato';
                 position: fixed;
+                background-image: url('{{ asset("img/gbg.jpg") }}');
             }
 
             /*For my table*/
             table {
                 font-family: arial, sans-serif;
                 border-collapse: collapse;
-                width: 100%;                
+                width: 100%;     
+                height: auto;     
             }
 
             td, th {
@@ -48,6 +50,18 @@
             color: white;
             text-shadow: 0px 0px 8px red;
            }
+           .div-side{
+            float: right; 
+            display: block; 
+            height: auto;  
+            position: absolute; 
+            margin-left: 400px;  
+            margin-top: 30px;  
+           }
+           .div-side1{            
+            float: left;  
+            display: block; 
+           }
         </style>
     </head>
     <body>
@@ -55,65 +69,68 @@
     <div class="print-error-msg" style="display:none;">
     <ul></ul>
     </div> -->
-     
+     <div class="div-side1">
      <form id="resetForm" class="form-style-4" method="POST" action="{{ url('/submit')}}">
              
          <label for="field1">
          <span>First Name</span><input type="text" name="fname" value="{{ Request::old('fname') }}" class="req-input-fn" />         
          </label>
-         <div class="print-error-msg" style="display:none; margin-left: 169px;">
+         <div class="print-error-msg" style="display:none; margin-left: 30px;">
          <span id="form-text1"></span>         
          </div>
 
          <label for="field1">
          <span>Last Name</span><input type="text" name="lname" value="{{ Request::old('lname') }}" class="req-input-ln" />
          </label>
-         <div class="print-error-msg" style="display:none; margin-left: 169px;">
+         <div class="print-error-msg" style="display:none; margin-left: 30px;">
          <span id="form-text2"></span>
          </div>
 
          <label for="field1">
          <span>Contact Number</span><input type="text" name="phone_number" value="{{ Request::old('phone_number') }}" class="req-input-pm" />
          </label>
-         <div class="print-error-msg" style="display:none; margin-left: 169px;">
+         <div class="print-error-msg" style="display:none; margin-left: 30px;">
          <span id="form-text3"></span>
          </div>
 
          <label for="field1">
-         <span>Tel. Number</span><input type="text" name="mobile_number" value="{{ Request::old('mobile_number') }}"/> *Optional
+         <span>Tel. Number</span><input type="text" name="mobile_number" placeholder="*Optional" value="{{ Request::old('mobile_number') }}" pattern="\d{3}[\-]\d{3}[\-]\d{4}
+"/> 
          </label>
 
-         <select class="req-input-cn" id="country" name="person_country">
+         <select class="req-input-cn" id="country" name="person_country" style="display: block; margin-top: 20px; border-bottom: 1px dashed #83A4C5; background: transparent; width: 275px; outline: none;">
              @foreach($countries as $country)
              <option value="{{$country->id}}">{{$country->name}}</option>
              @endforeach
          </select>
-         <div class="print-error-msg" style="display:none; margin-left: 169px;">
+         <div class="print-error-msg" style="display:none; margin-left: 30px;">
+         <span id="form-text4"></span>
+         </div>
+
+         <select class="req-input-sta" id="states" name="person_state" style=" display: block; margin-top: 20px; margin-top: 20px; border-bottom: 1px dashed #83A4C5; background: transparent; width: 275px; outline: none;">
+         </select>
+         <div class="print-error-msg" style="display:none; margin-left: 30px;">
          <span id="form-text5"></span>
          </div>
 
-         <select class="req-input-sta" id="states" name="person_state">
+         <select class="req-input-ct" id="cities" name="person_city" style=" display: block; margin-top: 20px; margin-top: 20px; border-bottom: 1px dashed #83A4C5; background: transparent; width: 275px; outline: none; ">        
          </select>
-         <div class="print-error-msg" style="display:none; margin-left: 169px;">
-         <span id="form-text5"></span>
-         </div>
-
-         <select class="req-input-ct" id="cities" name="person_city">        
-         </select>
-         <div class="print-error-msg" style="display:none; margin-left: 169px;">
+         <div class="print-error-msg" style="display:none; margin-left: 30px;">
          <span id="form-text6"></span>
          </div>
 
          <label for="field1">
-         <span>Street</span><input type="text" name="person_street" value="{{ Request::old('person_street') }}" class="req-input-str" />
+         <span style="margin-top: 10px;">Street</span><input type="text" name="person_street" value="{{ Request::old('person_street') }}" class="req-input-str" />
          </label>
-         <div class="print-error-msg" style="display:none; margin-left: 169px;">
+         <div class="print-error-msg" style="display:none; margin-left: 30px;">
          <span id="form-text7"></span>
          </div>
 
      <button class="btn-submit">Submit</button>
      </form>
-               
+   </div>
+
+  <div class="div-side">       
    <div style="overflow-y: auto; height: 500px;">
     <table id="myTable" >
         <tbody>
@@ -144,7 +161,7 @@
         </tbody>
     </table>
     </div>
-
+   </div>
     </body>
 
 
@@ -223,7 +240,7 @@
                 var person_country = $("#country option:selected").text();
                 var person_state = $("#states option:selected").text();
                 var person_city = $("#cities option:selected").text();
-                var person_street = $("input[name='person_street']").val();
+                var person_street = 'St, ' + $("input[name='person_street']").val();
 
 
                 $.ajax({
@@ -285,7 +302,6 @@
                     $("#form-text7").html("Street is required.");
                     $(".req-input-str").addClass("form-error");
                 }
-
             });
             }
              //Reset Error
@@ -304,15 +320,15 @@
                    }
                    if($("select[name='person_city']").val() > 0){
                      $(".req-input-ct").removeClass("form-error");
-                     $("#form-text4").html("");
+                     $("#form-text6").html("");
                    }
                    if($("select[name='person_country']").val() > 0){
                      $(".req-input-cn").removeClass("form-error");
-                     $("#form-text5").html("");
+                     $("#form-text4").html("");
                    }
                    if($("select[name='person_state']").val() > 0){
                      $(".req-input-sta").removeClass("form-error");
-                     $("#form-text6").html("");
+                     $("#form-text5").html("");
                    }
                    if($("input[name='person_street']").val()){
                      $(".req-input-str").removeClass("form-error");
@@ -326,7 +342,6 @@
                   $("select").change(function() {
                       RemoveErrors();
                   });
-
       });       
     </script>
 </html>
