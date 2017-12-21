@@ -75,9 +75,9 @@
     <div class="print-error-msg" style="display:none;">
     <ul></ul>
     </div> -->
-     <div class="div-side1">
+     <div class="div-side1">     
      <form id="resetForm" class="form-style-4" method="POST" action="{{ url('/submit')}}">
-             
+         <h1 style="color: white;">Personal Information</h1>
          <label for="field1">
          <span>First Name</span><input type="text" name="fname" value="{{ Request::old('fname') }}" class="req-input-fn" />         
          </label>
