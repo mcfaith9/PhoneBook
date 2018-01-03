@@ -140,7 +140,7 @@
          <label for="field1">
          <div class="tooltip">
            <span class="tooltiptext">Please input your Contact Number *Must be Numeric</span>
-         <span>Contact Number</span><input type="text" name="phone_number" value="{{ Request::old('phone_number') }}" class="req-input-pm" />
+         <span>Contact Number</span><input type="text" id="numericFilter" name="phone_number" value="{{ Request::old('phone_number') }}" class="req-input-pm" />
          </label>
          </div>
          <div class="print-error-msg" style="display:none; margin-left: 30px;">
@@ -325,39 +325,39 @@
             function printErrorMsg (msg) {
             $(".print-error-msg").find("ul").empty();
             $(".print-error-msg").css('display','block');
-            $.each( msg, function( key, value ) {
+            $.each( msg, function(key) {
 
-                if (key = 'fname') {
+                if (key == 'fname') {
                     $(".print-error-msg").addClass("form-error-text");
                     $("#form-text1").html("The First Name field is required.");
                     $(".req-input-fn").addClass("form-error");
                 }
-                if (key = 'lname') {
+                if (key == 'lname') {
                     $(".print-error-msg").addClass("form-error-text");
                     $("#form-text2").html("The Last Name field is required.");
                     $(".req-input-ln").addClass("form-error");
                 }
-                if (key = 'phone_number') {
+                if (key == 'phone_number') {
                     $(".print-error-msg").addClass("form-error-text");
                     $("#form-text3").html("The Countact Number field is required.");
                     $(".req-input-pm").addClass("form-error");
                 }
-                if (key = 'person_country') {
+                if (key == 'person_country') {
                     $(".print-error-msg").addClass("form-error-text");
                     $("#form-text4").html("Country is required.");
                     $(".req-input-cn").addClass("form-error");
                 }
-                if (key = 'person_state') {
+                if (key == 'person_state') {
                     $(".print-error-msg").addClass("form-error-text");
                     $("#form-text5").html("State is required.");
                     $(".req-input-sta").addClass("form-error");
                 }
-                if (key = 'person_city') {
+                if (key == 'person_city') {
                     $(".print-error-msg").addClass("form-error-text");
                     $("#form-text6").html("City is required.");
                     $(".req-input-ct").addClass("form-error");
                 }
-                if (key = 'person_street') {
+                if (key == 'person_street') {
                     $(".print-error-msg").addClass("form-error-text");
                     $("#form-text7").html("Street is required.");
                     $(".req-input-str").addClass("form-error");
@@ -401,6 +401,29 @@
                   });
                   $("select").change(function() {
                       RemoveErrors();
+                  });
+
+                  //Input Numeric Only
+                  $(document).ready(function() {
+                      $("#numericFilter").keydown(function (e) {
+                          // Allow: backspace, delete, tab, escape, enter and .
+                          if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
+                               // Allow: Ctrl/cmd+A
+                              (e.keyCode == 65 && (e.ctrlKey === true || e.metaKey === true)) ||
+                               // Allow: Ctrl/cmd+C
+                              (e.keyCode == 67 && (e.ctrlKey === true || e.metaKey === true)) ||
+                               // Allow: Ctrl/cmd+X
+                              (e.keyCode == 88 && (e.ctrlKey === true || e.metaKey === true)) ||
+                               // Allow: home, end, left, right
+                              (e.keyCode >= 35 && e.keyCode <= 39)) {
+                                   // let it happen, don't do anything
+                                   return;
+                          }
+                          // Ensure that it is a number and stop the keypress
+                          if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                              e.preventDefault();
+                          }
+                      });
                   });
       });       
     </script>
